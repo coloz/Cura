@@ -81,7 +81,7 @@ class mainWindow(wx.Frame):
 		self.fileMenu.AppendSeparator()
 		i = self.fileMenu.Append(-1, _("Print...\tCTRL+P"))
 		self.Bind(wx.EVT_MENU, lambda e: self.scene.OnPrintButton(1), i)
-		i = self.fileMenu.Append(-1, _("Save GCode..."))
+		i = self.fileMenu.Append(-1, _("Save GCode...\tCTRL+G"))
 		self.Bind(wx.EVT_MENU, lambda e: self.scene.showSaveGCode(), i)
 		i = self.fileMenu.Append(-1, _("Show slice engine log..."))
 		self.Bind(wx.EVT_MENU, lambda e: self.scene._showEngineLog(), i)
@@ -146,8 +146,8 @@ class mainWindow(wx.Frame):
 			i = toolsMenu.Append(-1, _("Auto Firmware Update..."))
 			self.Bind(wx.EVT_MENU, self.OnAutoFirmwareUpdate, i)
 
-		i = toolsMenu.Append(-1, _("Copy profile to clipboard"))
-		self.Bind(wx.EVT_MENU, self.onCopyProfileClipboard,i)
+		#i = toolsMenu.Append(-1, _("Copy profile to clipboard"))
+		#self.Bind(wx.EVT_MENU, self.onCopyProfileClipboard,i)
 
 		toolsMenu.AppendSeparator()
 		self.allAtOnceItem = toolsMenu.Append(-1, _("Print all at once"), kind=wx.ITEM_RADIO)
@@ -245,7 +245,7 @@ class mainWindow(wx.Frame):
 		#Timer set; used to check if profile is on the clipboard
 		self.timer = wx.Timer(self)
 		self.Bind(wx.EVT_TIMER, self.onTimer)
-		self.timer.Start(1000)
+		#self.timer.Start(1000)
 		self.lastTriedClipboard = profile.getProfileString()
 
 		# Restore the window position, size & state from the preferences file
@@ -285,6 +285,13 @@ class mainWindow(wx.Frame):
 		if Publisher is not None:
 			Publisher().subscribe(self.onPluginUpdate, "pluginupdate")
 
+		pluginCount = self.normalSettingsPanel.pluginPanel.GetActivePluginCount()
+		if pluginCount == 1:
+			self.scene.notification.message("Warning: 1 plugin from the previous session is still active.")
+
+		if pluginCount > 1:
+			self.scene.notification.message("Warning: %i plugins from the previous session are still active." % pluginCount)
+
 	def onPluginUpdate(self,msg): #receives commands from the plugin thread
 		cmd = str(msg.data).split(";")
 		if cmd[0] == "OpenPluginProgressWindow":
@@ -309,8 +316,15 @@ class mainWindow(wx.Frame):
 		elif cmd[0] == "ClosePluginProgressWindow":
 			self.dialogframe.Destroy()
 			self.dialogframe=None
-		else:
-			print "Unknown Plugin update received: " + cmd[0]
+		else: #assume first token to be the name and second token the percentage
+			if len(cmd)>=2:
+				number = int(cmd[1])
+			else:
+				number = 100
+			# direct output to Cura progress bar
+			self.scene.printButton.setProgressBar(float(number)/100.)
+			self.scene.printButton.setBottomText('%s' % (cmd[0]))
+			self.scene.QueueRefresh()
 
 	def onTimer(self, e):
 		#Check if there is something in the clipboard

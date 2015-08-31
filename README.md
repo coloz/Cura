@@ -24,7 +24,63 @@ Packaging
 Cura development comes with a script "package.sh", this script has been designed to run under *nix OSes (Linux, MacOS, FreeBSD). For Windows the package.sh script can be run from bash using git.
 The "package.sh" script generates a final release package. You should not need it during development, unless you are changing the release process. If you want to distribute your own version of Cura, then the package.sh script will allow you to do that.
 
+The "package.sh" script understands a number of envrionement variables defined at the top of the script. Review and adjust settings to match your needs.
+
 Both MacOS and Linux require some extra instructions for development, as you need to prepare an environment. Look below at the proper section to see what is needed.
+
+Fedora
+--------
+
+Fedora builds Cura by using ```mock```, thereby enabling it to build RPMs for
+every distribution that ```mock``` has a configuration file for. In pratice
+this means that Fedora can build RPMs for several versions of Fedora, CentOS
+and RHEL.
+
+Cura can be built under a regular user account, there is no need to have root
+privileges. In fact, having root privileges is very much discouraged.
+
+However, the user account under which the build is performed needs to be a
+member of the 'mock' group. This is accomplished as follows:
+
+```bash
+sudo usermod -a -G mock "$(whoami)"
+```
+
+To install the software that is required to build Cura, run the following
+commands:
+
+```bash
+sudo yum install -y git rpmdevtools rpm-build mock arduino
+
+# Ensure that the Arduino tools can be found by the build
+sudo mkdir -p /usr/share/arduino/hardware/tools/avr
+sudo ln -sf /usr/bin /usr/share/arduino/hardware/tools/avr/bin
+
+```
+
+To build and install Cura, run the following commands:
+
+```bash
+# Get the Cura software, only required once
+git clone https://github.com/daid/Cura.git Cura
+
+# Build for the current system
+cd Cura
+./package.sh fedora
+
+# Install on the current system
+sudo yum localinstall -y scripts/linux/fedora/RPMS/Cura-*.rpm
+```
+
+Examples of building other configurations:
+
+```bash
+# Build for Fedora rawhide x86-64 and i386
+./package.sh fedora fedora-rawhide-x86_64.cfg fedora-rawhide-i386.cfg
+
+# Since only the basename of the mock configurations is used, this also works:
+./package.sh fedora /etc/mock/fedora-21-x86_64.cfg /etc/mock/fedora-rawhide-i386.cfg
+```
 
 Debian and Ubuntu Linux
 --------
@@ -34,15 +90,12 @@ To build and install Cura, run the following commands:
 ```bash
 git clone https://github.com/daid/Cura.git
 
-sudo apt-get install python-opengl
-sudo apt-get install python-numpy
-sudo apt-get install python-serial
-sudo apt-get install python-setuptools
-sudo apt-get install curl
+sudo apt-get install python-opengl python-numpy python-serial python-setuptools python-wxgtk2.8 curl
 
 cd Cura
 
-sudo ./package.sh debian_amd64          # or debian_i386 for 32bit
+./package.sh debian_amd64          # or debian_i386 for 32bit
+# this will prompt for your root password to run dpkg-deb
 
 sudo dpkg -i ./scripts/linux/cura*.deb
 ```
@@ -79,13 +132,6 @@ The easiest way to install it is via [Homebrew](http://mxcl.github.com/homebrew/
 Note if you already have Python installed via Homebrew, you have to uninstall it first.
 
 You can also install [official build](http://www.python.org/ftp/python/2.7.3/python-2.7.3-macosx10.6.dmg).
-
-
-FreeBSD
---------
-On FreeBSD simply use the Port Tree (`cd /usr/ports/cad/cura`) to create (`make package`) and install (`make install`) the package as root. Port will check for all necessary dependencies. You can also use the provided binary package with `pkg install Cura`.
-
-If you want to create an archive for local use the `package.sh freebsd` script (as an ordinary user) will give you a tarball with the program.
 
 
 ###Configure Virtualenv
@@ -125,6 +171,10 @@ Assuming you have virtualenv at *~/.virtualenvs/Cura/* and [wxPython sources](ht
 2. `make install`
     Note to speedup the process I recommend you to enable multicore build by adding the -j*cores* flag:
     `make -j4 install`
+
+    Chances are high that compilation will fail with type mismatch error in Obj-C code. If it's the case then apply a patch at *scripts/darwin/wxPython-src-2.9.4.0.patch*.
+    If it won't fix all the errors, just modify source files manually by casting types to those expected by clang.
+
 3. `cd` into *~/Downloads/wxPython-src-2.9.4.0/wxPython/*
 4. Build wxPython (Note `python` is the python of your virtualenv):
 
@@ -166,10 +216,19 @@ Required python packages are specified in *requirements.txt* and *requirements_d
 If you use virtualenv, installing requirements as easy as `pip install -r requirements_darwin.txt`
 
 
+###Install Arduino.app
+[Arduino.app](http://www.arduino.cc/en/Main/Software) is required to compile certain components used by Cura. Tested version on Mac OS X is 1.0.5 but recent releases should also work.
+
+
 ###Package Cura into application
-Ensure that virtualenv is activated, so `python` points to the python of your virtualenv (e.g. ~/.virtualenvs/Cura/bin/python).Use package.sh to build Cura:
+Ensure that virtualenv is activated, so `python` points to the python of your virtualenv (e.g. ~/.virtualenvs/Cura/bin/python). Use package.sh to build Cura:
 `./package.sh darwin`
 
 Note that application is only guaranteed to work on Mac OS X version used to build and higher, but may not support lower versions.
 E.g. Cura built on 10.8 will work on 10.8 and 10.7, but not on 10.6. In other hand, Cura built on 10.6 will work on 10.6, 10.7 and 10.8.
 
+FreeBSD
+--------
+On FreeBSD simply use the Port Tree (`cd /usr/ports/cad/cura`) to create (`make package`) and install (`make install`) the package as root. Port will check for all necessary dependencies. You can also use the provided binary package with `pkg install Cura`.
+
+If you want to create an archive for local use the `package.sh freebsd` script (as an ordinary user) will give you a tarball with the program.

@@ -260,6 +260,7 @@ class PrintrbotPage(InfoPage):
 	def __init__(self, parent):
 		self._printer_info = [
 			# X, Y, Z, Nozzle Size, Filament Diameter, PrintTemperature, Print Speed, Travel Speed, Retract speed, Retract amount, use bed level sensor
+			("Play", 100, 100, 130, 0.4, 1.75, 208, 40, 70, 30, 1, True),
 			("Simple Metal", 150, 150, 150, 0.4, 1.75, 208, 40, 70, 30, 1, True),
 			("Metal Plus", 250, 250, 250, 0.4, 1.75, 208, 40, 70, 30, 1, True),
 			("Simple Makers Kit", 100, 100, 100, 0.4, 1.75, 208, 40, 70, 30, 1, True),
@@ -414,12 +415,16 @@ class MachineSelectPage(InfoPage):
 		super(MachineSelectPage, self).__init__(parent, _("Select your machine"))
 		self.AddText(_("What kind of machine do you have:"))
 
-		self.Ultimaker2Radio = self.AddRadioButton("Ultimaker2", style=wx.RB_GROUP)
-		self.Ultimaker2Radio.SetValue(True)
+		self.Ultimaker2PlusRadio = self.AddRadioButton("Ultimaker 2+", style=wx.RB_GROUP)
+		self.Ultimaker2PlusRadio.SetValue(True)
+		self.Ultimaker2PlusRadio.Bind(wx.EVT_RADIOBUTTON, self.OnUltimaker2Select)
+		self.Ultimaker2PlusExtRadio = self.AddRadioButton("Ultimaker 2 Extended+")
+		self.Ultimaker2PlusExtRadio.Bind(wx.EVT_RADIOBUTTON, self.OnUltimaker2Select)
+		self.Ultimaker2Radio = self.AddRadioButton("Ultimaker 2")
 		self.Ultimaker2Radio.Bind(wx.EVT_RADIOBUTTON, self.OnUltimaker2Select)
-		self.Ultimaker2ExtRadio = self.AddRadioButton("Ultimaker2extended")
+		self.Ultimaker2ExtRadio = self.AddRadioButton("Ultimaker 2 Extended")
 		self.Ultimaker2ExtRadio.Bind(wx.EVT_RADIOBUTTON, self.OnUltimaker2Select)
-		self.Ultimaker2GoRadio = self.AddRadioButton("Ultimaker2go")
+		self.Ultimaker2GoRadio = self.AddRadioButton("Ultimaker 2 Go")
 		self.Ultimaker2GoRadio.Bind(wx.EVT_RADIOBUTTON, self.OnUltimaker2Select)
 		self.UltimakerRadio = self.AddRadioButton("Ultimaker Original")
 		self.UltimakerRadio.Bind(wx.EVT_RADIOBUTTON, self.OnUltimakerSelect)
@@ -464,34 +469,42 @@ class MachineSelectPage(InfoPage):
 
 	def StoreData(self):
 		profile.putProfileSetting('retraction_enable', 'True')
-		if self.Ultimaker2Radio.GetValue() or self.Ultimaker2GoRadio.GetValue() or self.Ultimaker2ExtRadio.GetValue():
-			if self.Ultimaker2Radio.GetValue():
-				profile.putMachineSetting('machine_width', '230')
-				profile.putMachineSetting('machine_depth', '225')
+		if self.Ultimaker2Radio.GetValue() or self.Ultimaker2GoRadio.GetValue() or self.Ultimaker2ExtRadio.GetValue() or self.Ultimaker2PlusRadio.GetValue() or self.Ultimaker2PlusExtRadio.GetValue():
+			if self.Ultimaker2Radio.GetValue() or self.Ultimaker2PlusRadio.GetValue():
+				profile.putMachineSetting('machine_width', '223')
+				profile.putMachineSetting('machine_depth', '223')
 				profile.putMachineSetting('machine_height', '205')
-				profile.putMachineSetting('machine_name', 'ultimaker2')
-				profile.putMachineSetting('machine_type', 'ultimaker2')
+				if self.Ultimaker2PlusRadio.GetValue():
+					profile.putMachineSetting('machine_name', 'Ultimaker 2+')
+					profile.putMachineSetting('machine_type', 'ultimaker2+')
+				else:
+					profile.putMachineSetting('machine_name', 'Ultimaker 2')
+					profile.putMachineSetting('machine_type', 'ultimaker2')
 				profile.putMachineSetting('has_heated_bed', 'True')
+			if self.Ultimaker2ExtRadio.GetValue() or self.Ultimaker2PlusExtRadio.GetValue():
+				profile.putMachineSetting('machine_width', '223')
+				profile.putMachineSetting('machine_depth', '223')
+				profile.putMachineSetting('machine_height', '305')
+				if self.Ultimaker2PlusExtRadio.GetValue():
+					profile.putMachineSetting('machine_name', 'Ultimaker 2 Extended+')
+					profile.putMachineSetting('machine_type', 'ultimaker2+extended')
+				else:
+					profile.putMachineSetting('machine_name', 'Ultimaker 2 Extended')
+					profile.putMachineSetting('machine_type', 'ultimaker2extended')
+				profile.putMachineSetting('has_heated_bed', 'False')
 			if self.Ultimaker2GoRadio.GetValue():
 				profile.putMachineSetting('machine_width', '120')
 				profile.putMachineSetting('machine_depth', '120')
 				profile.putMachineSetting('machine_height', '115')
-				profile.putMachineSetting('machine_name', 'ultimaker2go')
+				profile.putMachineSetting('machine_name', 'Ultimaker 2 Go')
 				profile.putMachineSetting('machine_type', 'ultimaker2go')
-				profile.putMachineSetting('has_heated_bed', 'False')
-			if self.Ultimaker2ExtRadio.GetValue():
-				profile.putMachineSetting('machine_width', '230')
-				profile.putMachineSetting('machine_depth', '225')
-				profile.putMachineSetting('machine_height', '315')
-				profile.putMachineSetting('machine_name', 'ultimaker2extended')
-				profile.putMachineSetting('machine_type', 'ultimaker2extended')
 				profile.putMachineSetting('has_heated_bed', 'False')
 			profile.putMachineSetting('machine_center_is_zero', 'False')
 			profile.putMachineSetting('gcode_flavor', 'UltiGCode')
-			profile.putMachineSetting('extruder_head_size_min_x', '40.0')
-			profile.putMachineSetting('extruder_head_size_min_y', '10.0')
-			profile.putMachineSetting('extruder_head_size_max_x', '60.0')
-			profile.putMachineSetting('extruder_head_size_max_y', '30.0')
+			profile.putMachineSetting('extruder_head_size_min_x', '42.0')
+			profile.putMachineSetting('extruder_head_size_min_y', '12.0')
+			profile.putMachineSetting('extruder_head_size_max_x', '62.0')
+			profile.putMachineSetting('extruder_head_size_max_y', '32.0')
 			profile.putMachineSetting('extruder_head_size_height', '48.0')
 			profile.putProfileSetting('nozzle_size', '0.4')
 			profile.putProfileSetting('fan_full_height', '5.0')
@@ -501,7 +514,7 @@ class MachineSelectPage(InfoPage):
 			profile.putMachineSetting('machine_width', '205')
 			profile.putMachineSetting('machine_depth', '205')
 			profile.putMachineSetting('machine_height', '200')
-			profile.putMachineSetting('machine_name', 'ultimaker original')
+			profile.putMachineSetting('machine_name', 'Ultimaker Original')
 			profile.putMachineSetting('machine_type', 'ultimaker')
 			profile.putMachineSetting('machine_center_is_zero', 'False')
 			profile.putMachineSetting('gcode_flavor', 'RepRap (Marlin/Sprinter)')
@@ -515,7 +528,7 @@ class MachineSelectPage(InfoPage):
 			profile.putMachineSetting('machine_width', '205')
 			profile.putMachineSetting('machine_depth', '205')
 			profile.putMachineSetting('machine_height', '200')
-			profile.putMachineSetting('machine_name', 'ultimaker original+')
+			profile.putMachineSetting('machine_name', 'Ultimaker Original+')
 			profile.putMachineSetting('machine_type', 'ultimaker_plus')
 			profile.putMachineSetting('machine_center_is_zero', 'False')
 			profile.putMachineSetting('gcode_flavor', 'RepRap (Marlin/Sprinter)')
@@ -606,7 +619,7 @@ class UltimakerFirmwareUpgradePage(InfoPage):
 		self.AddText(_("The firmware shipping with new Ultimakers works, but upgrades\nhave been made to make better prints, and make calibration easier."))
 		self.AddHiddenSeperator()
 		self.AddText(_("Cura requires these new features and thus\nyour firmware will most likely need to be upgraded.\nYou will get the chance to do so now."))
-		upgradeButton, skipUpgradeButton = self.AddDualButton('Upgrade to Marlin firmware', 'Skip upgrade')
+		upgradeButton, skipUpgradeButton = self.AddDualButton('Upgrade firmware', 'Skip upgrade')
 		upgradeButton.Bind(wx.EVT_BUTTON, self.OnUpgradeClick)
 		skipUpgradeButton.Bind(wx.EVT_BUTTON, self.OnSkipClick)
 		self.AddHiddenSeperator()
@@ -1017,10 +1030,20 @@ class UltimakerCalibrateStepsPerEPage(InfoPage):
 
 class Ultimaker2ReadyPage(InfoPage):
 	def __init__(self, parent):
-		super(Ultimaker2ReadyPage, self).__init__(parent, _("Ultimaker2"))
-		self.AddText(_('Congratulations on your the purchase of your brand new Ultimaker2.'))
-		self.AddText(_('Cura is now ready to be used with your Ultimaker2.'))
+		super(Ultimaker2ReadyPage, self).__init__(parent, _("Ultimaker 2"))
+		self.AddText(_('Congratulations on your the purchase of your brand new Ultimaker 2.'))
+		self.AddText(_('Cura is now ready to be used with your Ultimaker 2.'))
 		self.AddSeperator()
+
+		self.AddText(_("Firmware is the piece of software running directly on your 3D printer.\nThis firmware controls the step motors, regulates the temperature\nand ultimately makes your printer work."))
+		self.AddHiddenSeperator()
+		self.AddText(_("For the best experience it is recommended to update your firmware right now."))
+		upgradeButton = self.AddButton('Upgrade firmware')
+		upgradeButton.Bind(wx.EVT_BUTTON, self.OnUpgradeClick)
+
+	def OnUpgradeClick(self, e):
+		firmwareInstall.InstallFirmware()
+
 
 class LulzbotReadyPage(InfoPage):
 	def __init__(self, parent):

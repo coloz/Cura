@@ -148,6 +148,8 @@ class CuraApp(wx.App):
 					return
 		if profile.getMachineSetting('machine_name') == '':
 			return
+		self.checkMachineConfigurations()
+
 		self.mainWindow = mainWindow.mainWindow()
 		if self.splash is not None:
 			self.splash.Show(False)
@@ -155,14 +157,30 @@ class CuraApp(wx.App):
 		self.SetTopWindow(self.mainWindow)
 		self.mainWindow.Show()
 		self.mainWindow.OnDropFiles(self.loadFiles)
+		self.new_version_dialog = None
 		if profile.getPreference('last_run_version') != version.getVersion(False):
 			profile.putPreference('last_run_version', version.getVersion(False))
-			newVersionDialog.newVersionDialog().Show()
+			self.new_version_dialog = newVersionDialog.newVersionDialog().Show()
 
 		setFullScreenCapable(self.mainWindow)
 
 		if sys.platform.startswith('darwin'):
 			wx.CallAfter(self.StupidMacOSWorkaround)
+
+	# Apply automatic configuration changes to work around bugs of previous Cura releases.
+	def checkMachineConfigurations(self):
+		from Cura.util import profile
+		for index in xrange(0, profile.getMachineCount()):
+			machine_type = profile.getMachineSetting('machine_type', index)
+			# Fix the Ultimaker2 build volume, which was wrong in previous version of Cura.
+			if machine_type.startswith('ultimaker2') and not machine_type.startswith('ultimaker2go'):
+				if abs(float(profile.getMachineSetting('machine_width', index)) - 230) < 10:
+					profile.putMachineSetting('machine_width', '223', index)
+				if abs(float(profile.getMachineSetting('machine_depth', index)) - 230) < 10:
+					profile.putMachineSetting('machine_depth', '223', index)
+				if abs(float(profile.getMachineSetting('machine_depth', index)) - 315) < 1:
+					profile.putMachineSetting('machine_depth', '305', index)
+
 
 	def StupidMacOSWorkaround(self):
 		"""
@@ -173,6 +191,9 @@ class CuraApp(wx.App):
 		wx.PostEvent(dlg, wx.CommandEvent(wx.EVT_CLOSE.typeId))
 		dlg.ShowModal()
 		dlg.Destroy()
+
+		if self.new_version_dialog is not None:
+			self.new_version_dialog.Show()
 
 if platform.system() == "Darwin": #Mac magic. Dragons live here. THis sets full screen options.
 	try:

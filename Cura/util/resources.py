@@ -76,8 +76,8 @@ def getSimpleModeMaterials():
 	return sorted(glob.glob(path))
 
 def setupLocalization(selectedLanguage = None):
-	#Default to english
-	languages = ['en']
+	#Default to chinese
+	languages = ['zh']
 
 	if selectedLanguage is not None:
 		for item in getLanguageOptions():
@@ -91,6 +91,7 @@ def setupLocalization(selectedLanguage = None):
 
 def getLanguageOptions():
 	return [
+		['zh', 'Chinese'],
 		['en', 'English'],
 		['de', 'Deutsch'],
 		['fr', 'French'],
@@ -98,7 +99,6 @@ def getLanguageOptions():
 		['ru', 'Russian'],
 		# ['it', 'Italian'],
 		# ['ko', 'Korean'],
-		# ['zh', 'Chinese'],
 		# ['nl', 'Nederlands'],
 		# ['es', 'Spanish'],
 		# ['po', 'Polish'],

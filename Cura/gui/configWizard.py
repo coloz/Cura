@@ -414,6 +414,13 @@ class MachineSelectPage(InfoPage):
 	def __init__(self, parent):
 		super(MachineSelectPage, self).__init__(parent, _("Select your machine"))
 		self.AddText(_("What kind of machine do you have:"))
+		#mostfun Sail
+		self.mostfunSail = self.AddRadioButton("mostfun Sail")
+		self.mostfunSail.SetValue(True)
+		self.mostfunSail.Bind(wx.EVT_RADIOBUTTON, self.OnmostfunSelect)
+		#mostfun Pro
+		self.mostfunPro = self.AddRadioButton("mostfun Pro")
+		self.mostfunPro.Bind(wx.EVT_RADIOBUTTON, self.OnmostfunSelect)
 
 		self.Ultimaker2PlusRadio = self.AddRadioButton("Ultimaker 2+", style=wx.RB_GROUP)
 		self.Ultimaker2PlusRadio.SetValue(True)
@@ -510,6 +517,33 @@ class MachineSelectPage(InfoPage):
 			profile.putProfileSetting('fan_full_height', '5.0')
 			profile.putMachineSetting('extruder_offset_x1', '18.0')
 			profile.putMachineSetting('extruder_offset_y1', '0.0')
+		#mostfun Sail
+		elif self.mostfunSail.GetValue():
+			profile.putMachineSetting('machine_width', '130')
+			profile.putMachineSetting('machine_depth', '130')
+			profile.putMachineSetting('machine_height', '110')
+			profile.putMachineSetting('machine_name', 'mostfun Sail')
+			profile.putMachineSetting('machine_type', 'mostfun')
+			profile.putMachineSetting('has_heated_bed', 'False')
+			profile.putMachineSetting('machine_center_is_zero', 'False')
+			profile.putMachineSetting('gcode_flavor', 'RepRap (Marlin/Sprinter)')
+			profile.putProfileSetting('nozzle_size', '0.4')
+			profile.putProfileSetting('retraction_speed', '50')
+			profile.putProfileSetting('retraction_amount', '2.0')
+
+		#mostfun Pro
+		elif self.mostfunPro.GetValue():
+			profile.putMachineSetting('machine_width', '180')
+			profile.putMachineSetting('machine_depth', '160')
+			profile.putMachineSetting('machine_height', '160')
+			profile.putMachineSetting('machine_name', 'mostfun Pro')
+			profile.putMachineSetting('machine_type', 'mostfun')
+			profile.putMachineSetting('has_heated_bed', 'True')
+			profile.putMachineSetting('gcode_flavor', 'RepRap (Marlin/Sprinter)')
+			profile.putProfileSetting('nozzle_size', '0.4')
+			profile.putProfileSetting('retraction_speed', '50')
+			profile.putProfileSetting('retraction_amount', '2.0')
+
 		elif self.UltimakerRadio.GetValue():
 			profile.putMachineSetting('machine_width', '205')
 			profile.putMachineSetting('machine_depth', '205')
@@ -1028,6 +1062,13 @@ class UltimakerCalibrateStepsPerEPage(InfoPage):
 	def StoreData(self):
 		profile.putPreference('steps_per_e', self.stepsPerEInput.GetValue())
 
+class mostfunReadyPage(InfoPage):
+	def __init__(self, parent):
+		super(mostfunReadyPage, self).__init__(parent, _("mostfun"))
+		self.AddText(_('Congratulations on your the purchase of your brand new mostfun.'))
+		self.AddText(_('Cura is now ready to be used with your mostfun.'))
+		self.AddSeperator()
+
 class Ultimaker2ReadyPage(InfoPage):
 	def __init__(self, parent):
 		super(Ultimaker2ReadyPage, self).__init__(parent, _("Ultimaker 2"))
@@ -1079,6 +1120,8 @@ class ConfigWizard(wx.wizard.Wizard):
 
 		self.ultimaker2ReadyPage = Ultimaker2ReadyPage(self)
 		self.lulzbotReadyPage = LulzbotReadyPage(self)
+		
+		self.mostfunReadyPage = mostfunReadyPage(self)
 
 		wx.wizard.WizardPageSimple.Chain(self.firstInfoPage, self.machineSelectPage)
 		#wx.wizard.WizardPageSimple.Chain(self.machineSelectPage, self.ultimaker2ReadyPage)

@@ -194,7 +194,6 @@ class InstallFirmware(wx.Dialog):
 	def OnClose(self, e):
 		self.Destroy()
 
-
 class AutoUpdateFirmware(wx.Dialog):
 	def __init__(self, parent, filename = None, port = None, machineIndex = None):
 		super(AutoUpdateFirmware, self).__init__(parent=parent, title="Auto Firmware install", size=(250, 500))

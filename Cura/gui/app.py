@@ -129,7 +129,7 @@ class CuraApp(wx.App):
 		#If we haven't run it before, run the configuration wizard.
 		if profile.getMachineSetting('machine_type') == 'unknown':
 			#Check if we need to copy our examples
-			exampleFile = os.path.normpath(os.path.join(resources.resourceBasePath, 'example', 'UltimakerRobot_support.stl'))
+			exampleFile = os.path.normpath(os.path.join(resources.resourceBasePath, 'example', 'birdcage_pro.stl'))
 
 			self.loadFiles = [exampleFile]
 			if self.splash is not None:
@@ -137,15 +137,15 @@ class CuraApp(wx.App):
 				self.splash = None
 			configWizard.ConfigWizard()
 
-		if profile.getPreference('check_for_updates') == 'True':
-			newVersion = version.checkForNewerVersion()
-			if newVersion is not None:
-				if self.splash is not None:
-					self.splash.Show(False)
-					self.splash = None
-				if wx.MessageBox(_("A new version of Cura is available, would you like to download?"), _("New version available"), wx.YES_NO | wx.ICON_INFORMATION) == wx.YES:
-					webbrowser.open(newVersion)
-					return
+		# if profile.getPreference('check_for_updates') == 'True':
+		# 	newVersion = version.checkForNewerVersion()
+		# 	if newVersion is not None:
+		# 		if self.splash is not None:
+		# 			self.splash.Show(False)
+		# 			self.splash = None
+		# 		if wx.MessageBox(_("A new version of Cura is available, would you like to download?"), _("New version available"), wx.YES_NO | wx.ICON_INFORMATION) == wx.YES:
+		# 			webbrowser.open(newVersion)
+		# 			return
 		if profile.getMachineSetting('machine_name') == '':
 			return
 		self.checkMachineConfigurations()

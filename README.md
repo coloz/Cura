@@ -1,6 +1,8 @@
 Cura4mostfun
 ====
 
+![image](https://raw.githubusercontent.com/coloz/Cura-for-mostfun/mostfun/readme1.jpg)
+
 这是mostfun版的Cura
 ------------------
 

@@ -313,7 +313,7 @@ setting('solid_bottom', True, bool, 'expert', _('Infill')).setLabel(_("Solid inf
     "Create a solid bottom surface, if set to false the bottom is filled with the fill percentage. Useful for buildings."))
 setting('fill_overlap', 15, int, 'expert', _('Infill')).setRange(0, 100).setLabel(_("Infill overlap (%)"), _(
     "Amount of overlap between the infill and the walls. There is a slight overlap with the walls and the infill so the walls connect firmly to the infill."))
-setting('perimeter_before_infill', False, bool, 'expert', _('Infill')).setLabel(_("Infill prints after perimeters"), _(
+setting('perimeter_before_infill', True, bool, 'expert', _('Infill')).setLabel(_("Infill prints after perimeters"), _(
     "Print infill after perimeter lines. This can reduce infill from showing through the surface. If not checked, infill will print before perimeter lines."))
 setting('support_type', 'Lines', ['Grid', 'Lines'], 'expert', _('Support')).setLabel(_("Structure type"), _(
     "The type of support structure.\nGrid is very strong and can come off in 1 piece, however, sometimes it is too strong.\nLines are single walled lines that break off one at a time. Which is more work to remove, but as it is less strong it does work better on tricky prints."))

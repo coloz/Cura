@@ -452,36 +452,37 @@ class MachineSelectPage(InfoPage):
 
 	def StoreData(self):
 
-		# profileFile = dlg.GetPath()
-		# profile.loadProfile(profileFile)
-		# self.updateProfileToAllControls()
-
-		profile.putMachineSetting('machine_center_is_zero', 'False')
-		profile.putMachineSetting('gcode_flavor', 'RepRap (Marlin/Sprinter)')
-		profile.putProfileSetting('retraction_enable', 'True')
-		profile.putProfileSetting('nozzle_size', '0.4')
-		profile.putProfileSetting('wall_thickness','0.8')
-		profile.putProfileSetting('retraction_speed', '60')
-		profile.putProfileSetting('retraction_amount', '1.0')
-
+		# profile.putMachineSetting('machine_center_is_zero', 'False')
+		# profile.putMachineSetting('gcode_flavor', 'RepRap (Marlin/Sprinter)')
+		# profile.putProfileSetting('retraction_enable', 'True')
+		# profile.putProfileSetting('nozzle_size', '0.4')
+		# profile.putProfileSetting('wall_thickness','0.8')
+		# profile.putProfileSetting('retraction_speed', '60')
+		# profile.putProfileSetting('retraction_amount', '1.0')
+		# profile.putProfileSetting('print_bed_temperature', '0')
 		#mostfun Sail
 		if self.mostfunSail.GetValue():
-			profile.putMachineSetting('machine_width', '130')
-			profile.putMachineSetting('machine_depth', '130')
-			profile.putMachineSetting('machine_height', '110')
-			profile.putMachineSetting('machine_name', 'mostfun Sail')
-			profile.putMachineSetting('machine_type', 'mostfun')
-			profile.putMachineSetting('has_heated_bed', 'False')
-			profile.putMachineSetting('extruder_amount', '1')
+			profile.loadProfile(os.path.join(resources.resourceBasePath,'machine_profiles','mostfun Sail.ini'))
+			profile.loadMachineSettings(os.path.join(resources.resourceBasePath,'machine_profiles','mostfun Sail.ini'))
+			# profile.putMachineSetting('machine_width', '130')
+			# profile.putMachineSetting('machine_depth', '130')
+			# profile.putMachineSetting('machine_height', '110')
+			# profile.putMachineSetting('machine_name', 'mostfun Sail')
+			# profile.putMachineSetting('machine_type', 'mostfun')
+			# profile.putMachineSetting('has_heated_bed', 'False')
+			# profile.putMachineSetting('extruder_amount', '1')
 
 		#mostfun Pro
 		elif self.mostfunPro.GetValue():
-			profile.putMachineSetting('machine_width', '220')
-			profile.putMachineSetting('machine_depth', '180')
-			profile.putMachineSetting('machine_height', '155')
-			profile.putMachineSetting('machine_name', 'mostfun Pro')
-			profile.putMachineSetting('machine_type', 'mostfun')
-			profile.putMachineSetting('has_heated_bed', 'True')
+			profile.loadProfile(os.path.join(resources.resourceBasePath,'machine_profiles', 'mostfun Pro_PLA.ini'))
+			profile.loadMachineSettings(os.path.join(resources.resourceBasePath,'machine_profiles','mostfun Pro_PLA.ini'))
+			# profile.putMachineSetting('machine_width', '220')
+			# profile.putMachineSetting('machine_depth', '180')
+			# profile.putMachineSetting('machine_height', '155')
+			# profile.putMachineSetting('machine_name', 'mostfun Pro')
+			# profile.putMachineSetting('machine_type', 'mostfun')
+			# profile.putMachineSetting('has_heated_bed', 'True')
+
 
 		profile.checkAndUpdateMachineName()
 		# profile.putProfileSetting('wall_thickness', float(profile.getProfileSetting('nozzle_size')) * 2)

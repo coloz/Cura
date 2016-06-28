@@ -78,14 +78,6 @@ class mainWindow(wx.Frame):
         self.SetSizer(sizer)
         sizer.Layout()
 
-        # self.view_panel=wx.Panel(self)
-        #
-        # self.scene = sceneView.SceneView(self.view_panel)
-        # sizer = wx.BoxSizer()
-        # self.view_panel.SetSizer(sizer)
-        # sizer.Add(self.scene,0,wx.EXPAND|wx.ALL,0)
-        # self.SetSizer(sizer)
-
         self.updateProfileToAllControls()
 
         # Set default window size & position

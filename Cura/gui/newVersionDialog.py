@@ -22,8 +22,8 @@ class newVersionDialog(wx.Dialog):
 		title = wx.StaticText(p, -1, 'Cura for mostfun ' + version.getVersion())
 		title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
 		s.Add(title, flag=wx.ALIGN_CENTRE|wx.EXPAND|wx.BOTTOM, border=5)
-		s.Add(wx.StaticText(p, -1, 'test test test'))
-		s.Add(wx.StaticText(p, -1, 'mostfun mostfun mostfun'))
+		s.Add(wx.StaticText(p, -1, 'This is a beta version,you can see the source code in the following link:'))
+		s.Add(wx.StaticText(p, -1, 'https://github.com/coloz/Cura-for-mostfun'))
 
 		s.Add(wx.StaticLine(p), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=10)
 		button = wx.Button(p, -1, 'Ok')

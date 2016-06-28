@@ -73,7 +73,7 @@ class SceneView(openglGui.glGuiPanel):
         self.printButton = openglGui.glButton(self, 5, _("Print"), (3, 0), self.OnPrintButton)
         self.printButton.setDisabled(True)
         self.sliceButton = openglGui.glButton(self, 26, _("Slice"), (1, 0), self._onRunEngine)
-        # self.sliceButton.setDisabled(True)
+        self.sliceButton.setDisabled(True)
 
         self.settingButton = openglGui.glButton(self, 4, _("Settings"), (-1, 0), self.OnSettingsButton)
 
@@ -260,6 +260,7 @@ class SceneView(openglGui.glGuiPanel):
             self.printButton.setDisabled(True)
             self.saveButton.setDisabled(True)
 
+
     def showSaveModel(self):
         if len(self._scene.objects()) < 1:
             return
@@ -312,7 +313,7 @@ class SceneView(openglGui.glGuiPanel):
             for p in pluginInfo.getPluginList('printwindow'):
                 if p.getName() == windowType:
                     connection.window = printWindow.printWindowPlugin(self, connection, p.getFullFilename())
-                    break
+                break
             if connection.window is None:
                 connection.window = printWindow.printWindowBasic(self, connection)
         connection.window.Show()
@@ -616,6 +617,7 @@ class SceneView(openglGui.glGuiPanel):
         self.QueueRefresh()
         self.printButton.setDisabled(True)
         self.saveButton.setDisabled(True)
+        self.sliceButton.setDisabled(False)
 
     def OnSaveButton(self,e):
         pass
@@ -631,7 +633,7 @@ class SceneView(openglGui.glGuiPanel):
             if self.sliceButton.getProgressBar() is not None and progressValue >= 0.0 and abs(
                             self.sliceButton.getProgressBar() - progressValue) < 0.01:
                 return
-        self.sliceButton.setDisabled(not finished)
+        # self.sliceButton.setDisabled(not finished)
         self.printButton.setDisabled(not finished)
         self.saveButton.setDisabled(not finished)
 

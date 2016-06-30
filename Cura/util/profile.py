@@ -595,7 +595,7 @@ setting('simpleModeProfile', 'Normal', str, 'preference', 'hidden')
 setting('simpleModeMaterial', 'Pla', str, 'preference', 'hidden')
 setting('simpleModeNozzle', '0.4', str, 'preference', 'hidden')
 setting('simpleModePlatformAdhesion', '1', str, 'preference', 'hidden')
-setting('oneAtATime', 'True', bool, 'preference', 'hidden')
+setting('oneAtATime', 'False', bool, 'preference', 'hidden')
 setting('lastFile', os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'resources', 'example',
                  'UltimakerRobot_support.stl')), str, 'preference', 'hidden')

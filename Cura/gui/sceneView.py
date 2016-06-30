@@ -1353,11 +1353,13 @@ class SceneView(openglGui.glGuiPanel):
             texture_scale = 1.0
             if machine_type == 'mostfun':
                 if machine_name == 'mostfun Sail':
-                    filename = resources.getPathForMesh('mostfun_sail.stl')
-                    offset = [-9, -37, 145]
-                    texture_name = 'mostfun_plate.png'
-                    texture_offset = [9, 150, -5]
-                elif machine_name == 'mostfun Pro':
+                    filename = resources.getPathForMesh('mostfun_sail_platform.stl')
+                    # offset = [77, -45, 25]
+                    offset = [-12, -195, 32.5]
+                    texture_offset = [55, -76, -22]
+                    texture_name = 'mostfun_sail_plate.png'
+                    texture_scale = 0.4
+                elif 'mostfun Pro' in machine_name:
                     filename = resources.getPathForMesh('mostfun_pro_platform.stl')
                     offset = [77, -45, 25]
                     texture_offset = [75, -106, -24]

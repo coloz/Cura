@@ -68,9 +68,10 @@ class SceneView(openglGui.glGuiPanel):
         self._sliced = False
 
         self.openFileButton = openglGui.glButton(self, 2, _("Load"), (0, 0), self.showLoadModel)
-        self.saveButton = openglGui.glButton(self, 3, _("Save"), (2, 0), self.showSaveGCode)
+        # 这里Save和Print会因为国际化问题，无法显示
+        self.saveButton = openglGui.glButton(self, 3, "Save", (2, 0), self.showSaveGCode)
         self.saveButton.setDisabled(True)
-        self.printButton = openglGui.glButton(self, 5, _("Print"), (3, 0), self.OnPrintButton)
+        self.printButton = openglGui.glButton(self, 5, "Print", (3, 0), self.OnPrintButton)
         self.printButton.setDisabled(True)
         self.sliceButton = openglGui.glButton(self, 26, _("Slice"), (1, 0), self._onRunEngine)
         self.sliceButton.setDisabled(True)
@@ -1004,18 +1005,6 @@ class SceneView(openglGui.glGuiPanel):
 
     def OnPaint(self, e):
         connectionGroup = self._printerConnectionManager.getAvailableGroup()
-        if len(removableStorage.getPossibleSDcardDrives()) > 0 and (
-                        connectionGroup is None or connectionGroup.getPriority() < 0):
-            self.printButton._imageID = 5
-            self.printButton._tooltip = _("Toolpath to SD")
-        elif connectionGroup is not None:
-            # self.printButton._imageID = connectionGroup.getIconID()
-            self.printButton._imageID = 5
-            self.printButton._tooltip = _("Print with %s") % (connectionGroup.getName())
-        else:
-            self.printButton._imageID = 5
-            self.printButton._tooltip = _("Save toolpath")
-
         if self._animView is not None:
             self._viewTarget = self._animView.getPosition()
             if self._animView.isDone():

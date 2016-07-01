@@ -66,7 +66,7 @@ class slicerTab(configBase.configPanelBase):
 
         self.panel = configBase.configPanelBase(self, callback)
         left, right, main = self.panel.CreateConfigPanel(self)
-        configBase.TitleRow(left, 'Material')
+        configBase.TitleRow(left, _('Material'))
         machineName = profile.getMachineSetting('machine_name')
         if 'mostfun Pro' in machineName:
             radiobutton_panel = left
@@ -96,13 +96,13 @@ class slicerTab(configBase.configPanelBase):
 
         self.filament_diameter = configBase.SettingRow(left, 'filament_diameter')
 
-        configBase.TitleRow(left, 'Basic')
+        configBase.TitleRow(left, _('Basic'))
         self.layer_height = configBase.SettingRow(left, 'layer_height')
         self.wall_thickness = configBase.SettingRow(left, 'wall_thickness')
         self.print_temperature = configBase.SettingRow(left, 'print_temperature')
         self.print_speed = configBase.SettingRow(left, 'print_speed')
 
-        configBase.TitleRow(left, 'Advanced')
+        configBase.TitleRow(left,_('Advanced'))
         self.print_bed_temperature=configBase.SettingRow(left,'print_bed_temperature')
         self.support = configBase.SettingRow(left, 'support')
         self.platform_adhesion = configBase.SettingRow(left, 'platform_adhesion')
@@ -138,7 +138,7 @@ class machineTab(configBase.configPanelBase):
         self.panel = configBase.configPanelBase(self, callback)
         self.left, self.right, self.main = self.panel.CreateConfigPanel(self)
 
-        configBase.TitleRow(self.left, 'Model')
+        configBase.TitleRow(self.left, _('Model'))
         radiobutton_panel = self.left
         self.sail_button = wx.RadioButton(radiobutton_panel, -1, 'mostfun Sail', style=wx.RB_GROUP)
         self.pro_button = wx.RadioButton(radiobutton_panel, -1, 'mostfun Pro')
@@ -154,7 +154,7 @@ class machineTab(configBase.configPanelBase):
         sizer.Add(self.pro_button, (sizer.GetRows(), 0), border=10,flag=wx.LEFT)
         sizer.SetRows(sizer.GetRows() + 1)
 
-        configBase.TitleRow(self.left, 'Building size')
+        configBase.TitleRow(self.left, _('Building size'))
         self.machine_width = configBase.SettingRow(self.left, 'machine_width')
         self.machine_depth = configBase.SettingRow(self.left, 'machine_depth')
         self.machine_height = configBase.SettingRow(self.left, 'machine_height')
